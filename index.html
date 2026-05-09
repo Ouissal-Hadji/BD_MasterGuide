@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD Master Guide — Constantine 2 | L2 MI S4</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e28;
+  --border: #252a38;
+  --accent: #4f9eff;
+  --accent2: #f97316;
+  --accent3: #22d3a5;
+  --accent4: #a855f7;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --sql: #fbbf24;
+  --correct: #22d3a5;
+  --wrong: #f87171;
+  --card: #161b26;
+  --highlight: rgba(79,158,255,0.12);
+}
+[data-theme="light"] {
+  --bg: #f0f4ff;
+  --bg2: #e8eef8;
+  --bg3: #dce6f5;
+  --border: #c5d3ea;
+  --accent: #1d4ed8;
+  --accent2: #ea580c;
+  --accent3: #059669;
+  --accent4: #7c3aed;
+  --text: #0f172a;
+  --text2: #334155;
+  --text3: #64748b;
+  --sql: #92400e;
+  --card: #ffffff;
+  --highlight: rgba(29,78,216,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.3s,color 0.3s;}
+.arabic{font-family:'Noto Sans Arabic',sans-serif;direction:rtl;text-align:right;}
+code,pre,.code-block{font-family:'JetBrains Mono',monospace;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;backdrop-filter:blur(12px);}
+.nav-brand{font-size:1rem;font-weight:800;color:var(--accent);letter-spacing:-0.5px;}
+.nav-controls{display:flex;gap:0.5rem;align-items:center;}
+.lang-btn,.theme-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;font-family:'Syne',sans-serif;transition:all 0.2s;}
+.lang-btn:hover,.theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+.lang-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;}
+.sidebar-section{padding:0.3rem 1rem;font-size:0.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-top:1rem;}
+.sidebar-item{display:flex;align-items:center;gap:0.6rem;padding:0.45rem 1.2rem;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.2s;border-left:2px solid transparent;}
+.sidebar-item:hover{color:var(--text);background:var(--highlight);}
+.sidebar-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--highlight);}
+.sidebar-icon{font-size:1rem;width:20px;text-align:center;}
+
+/* MAIN */
+main{padding:2rem;max-width:960px;}
+section{display:none;animation:fadeIn 0.3s ease;}
+section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADINGS */
+.page-title{font-size:2rem;font-weight:800;margin-bottom:0.3rem;letter-spacing:-1px;}
+.page-subtitle{color:var(--text2);font-size:0.95rem;margin-bottom:2rem;}
+.page-title span{color:var(--accent);}
+h2{font-size:1.3rem;font-weight:700;margin:2rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.5rem;}
+h2::before{content:'';display:inline-block;width:4px;height:20px;background:var(--accent);border-radius:2px;}
+h3{font-size:1rem;font-weight:700;margin:1.5rem 0 0.7rem;color:var(--accent2);}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color 0.2s;}
+.card:hover{border-color:var(--accent);}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:700px){.card-grid{grid-template-columns:1fr;}.layout{grid-template-columns:1fr;}.sidebar{display:none;}}
+
+/* BADGES */
+.badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:700;margin:0.1rem;letter-spacing:0.02em;}
+.badge-blue{background:rgba(79,158,255,0.15);color:#4f9eff;border:1px solid rgba(79,158,255,0.3);}
+.badge-orange{background:rgba(249,115,22,0.15);color:#f97316;border:1px solid rgba(249,115,22,0.3);}
+.badge-green{background:rgba(34,211,165,0.15);color:#22d3a5;border:1px solid rgba(34,211,165,0.3);}
+.badge-purple{background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);}
+.badge-yellow{background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);}
+
+/* CODE BLOCK */
+.code-block{background:#0a0c12;border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;margin:0.8rem 0;overflow-x:auto;position:relative;}
+[data-theme="light"] .code-block{background:#1a1e28;}
+.code-block pre{font-size:0.82rem;line-height:1.7;color:#e2e8f0;}
+.code-label{font-size:0.7rem;font-weight:700;color:var(--sql);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.05em;}
+.kw{color:#4f9eff;font-weight:700;}
+.fn{color:#22d3a5;}
+.str{color:#f97316;}
+.cmt{color:#5a6a8a;font-style:italic;}
+.tbl{color:#a855f7;}
+.num{color:#fbbf24;}
+
+/* TABLE */
+.db-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin:0.8rem 0;}
+.db-table th{background:var(--bg3);color:var(--accent);font-weight:700;padding:0.5rem 0.8rem;text-align:left;border:1px solid var(--border);}
+.db-table td{padding:0.4rem 0.8rem;border:1px solid var(--border);color:var(--text2);}
+.db-table tr:hover td{background:var(--highlight);}
+.pk{color:var(--accent);font-weight:700;}
+.fk{color:var(--accent2);}
+
+/* ALERT */
+.alert{border-radius:8px;padding:0.8rem 1rem;margin:0.8rem 0;font-size:0.87rem;display:flex;gap:0.6rem;align-items:flex-start;}
+.alert-tip{background:rgba(34,211,165,0.1);border:1px solid rgba(34,211,165,0.3);color:var(--accent3);}
+.alert-warn{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:var(--accent2);}
+.alert-info{background:rgba(79,158,255,0.1);border:1px solid rgba(79,158,255,0.3);color:var(--accent);}
+.alert-exam{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);color:var(--accent4);}
+
+/* FORMULA */
+.formula{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.8rem 1.2rem;margin:0.6rem 0;font-size:0.9rem;font-family:'JetBrains Mono',monospace;text-align:center;letter-spacing:0.03em;}
+
+/* SVG DIAGRAM */
+.diagram-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:1rem 0;overflow-x:auto;}
+.diagram-wrap svg{max-width:100%;}
+
+/* ACCORDION */
+.acc-btn{width:100%;text-align:left;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.8rem 1rem;cursor:pointer;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:all 0.2s;margin-bottom:0.3rem;}
+.acc-btn:hover{border-color:var(--accent);color:var(--accent);}
+.acc-btn.open{border-color:var(--accent);background:var(--highlight);}
+.acc-content{display:none;padding:0.8rem 1rem;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;margin-bottom:0.5rem;}
+.acc-content.open{display:block;}
+
+/* EXAM SECTION */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.q-num{font-size:0.75rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;}
+.q-pts{background:var(--accent4);color:#fff;border-radius:20px;padding:0.2rem 0.6rem;font-size:0.75rem;font-weight:700;}
+.q-text{font-size:0.95rem;line-height:1.6;margin-bottom:1rem;}
+.show-answer-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.9rem;cursor:pointer;font-size:0.82rem;font-weight:700;font-family:'Syne',sans-serif;color:var(--text2);transition:all 0.2s;}
+.show-answer-btn:hover{border-color:var(--accent3);color:var(--accent3);}
+.answer-box{display:none;margin-top:0.8rem;padding:1rem;background:rgba(34,211,165,0.07);border:1px solid rgba(34,211,165,0.25);border-radius:8px;}
+.answer-box.visible{display:block;}
+
+/* PROGRESS */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:2rem;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width 0.5s;}
+
+/* MERISE DIAGRAM */
+.entity-box{fill:none;stroke:var(--accent);stroke-width:2;}
+.relation-diamond{fill:none;stroke:var(--accent2);stroke-width:2;}
+.attr-ellipse{fill:none;stroke:var(--accent3);stroke-width:1.5;}
+.diagram-text{font-family:'Syne',sans-serif;font-size:12px;fill:var(--text);}
+.diagram-line{stroke:var(--text3);stroke-width:1.5;}
+
+/* FD GRAPH */
+.fd-node{fill:var(--bg3);stroke:var(--accent);stroke-width:2;}
+.fd-arrow{stroke:var(--accent2);stroke-width:2;fill:none;marker-end:url(#arr);}
+
+/* LANG */
+.en-text,.ar-text{display:block;}
+body.ar .en-text{display:none;}
+body.ar .ar-text{display:block;}
+body:not(.ar) .ar-text{display:none;}
+body:not(.ar) .en-text{display:block;}
+
+/* NF LEVELS */
+.nf-step{display:flex;gap:1rem;margin-bottom:0.8rem;align-items:flex-start;}
+.nf-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;}
+.nf-1{background:rgba(249,115,22,0.2);color:var(--accent2);}
+.nf-2{background:rgba(251,191,36,0.2);color:var(--sql);}
+.nf-3{background:rgba(34,211,165,0.2);color:var(--accent3);}
+
+.scrolltop{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--accent);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;z-index:99;opacity:0;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.scrolltop.visible{opacity:1;}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">📚 BD Master Guide — L2 MI S4</span>
+  <div class="nav-controls">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnAR" onclick="setLang('ar')">عربي</button>
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section en-text">Course</div>
+    <div class="sidebar-section ar-text">المحاضرات</div>
+    <div class="sidebar-item active" onclick="showSection('ch1')"><span class="sidebar-icon">🗄️</span><span class="en-text">Ch1 · DB & DBMS</span><span class="ar-text">ف1 · قاعدة البيانات</span></div>
+    <div class="sidebar-item" onclick="showSection('ch2')"><span class="sidebar-icon">🔗</span><span class="en-text">Ch2 · Relational Model</span><span class="ar-text">ف2 · النموذج العلائقي</span></div>
+    <div class="sidebar-item" onclick="showSection('ch3')"><span class="sidebar-icon">⚙️</span><span class="en-text">Ch3 · Rel. Algebra</span><span class="ar-text">ف3 · الجبر العلائقي</span></div>
+    <div class="sidebar-item" onclick="showSection('ch4')"><span class="sidebar-icon">💾</span><span class="en-text">Ch4 · SQL</span><span class="ar-text">ف4 · SQL</span></div>
+    <div class="sidebar-item" onclick="showSection('ch5')"><span class="sidebar-icon">📐</span><span class="en-text">Ch5 · Normalization</span><span class="ar-text">ف5 · التطبيع</span></div>
+    <div class="sidebar-item" onclick="showSection('merise')"><span class="sidebar-icon">🗺️</span><span class="en-text">E/R Diagrams (Merise)</span><span class="ar-text">مخططات E/R (Merise)</span></div>
+    <div class="sidebar-section en-text">Exam Practice</div>
+    <div class="sidebar-section ar-text">تدريب على الامتحان</div>
+    <div class="sidebar-item" onclick="showSection('exam')"><span class="sidebar-icon">📝</span><span class="en-text">Mock Exam 2025</span><span class="ar-text">امتحان تجريبي</span></div>
+  </aside>
+
+  <main id="mainContent">
+    <!-- ===== CH1 ===== -->
+    <section id="ch1" class="active">
+      <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+      <p class="page-title"><span>Chapter 1</span> · DB & DBMS</p>
+      <p class="page-subtitle en-text">Database Genesis & Database Management System — the why and what</p>
+      <p class="page-subtitle ar-text arabic">نشأة قواعد البيانات ونظام إدارتها — السبب والتعريف</p>
+
+      <h2><span class="en-text">Why databases? Problems with traditional file systems</span><span class="ar-text arabic">لماذا قواعد البيانات؟ مشاكل الملفات التقليدية</span></h2>
+      <div class="card-grid">
+        <div class="card"><strong style="color:var(--accent2)">🔁 Redundancy</strong><br><span class="en-text" style="font-size:0.88rem;">Same data repeated in multiple files → inconsistency & maintenance cost.</span><span class="ar-text arabic" style="font-size:0.88rem;">البيانات مكررة في ملفات متعددة → تعارض البيانات وصعوبة الصيانة.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">⚠️ Inconsistency</strong><br><span class="en-text" style="font-size:0.88rem;">Semantic links not automatically maintained between files.</span><span class="ar-text arabic" style="font-size:0.88rem;">الروابط الدلالية غير محفوظة تلقائياً بين الملفات.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">🔒 Security Issues</strong><br><span class="en-text" style="font-size:0.88rem;">Hard to protect multiple copies; recovery is complex.</span><span class="ar-text arabic" style="font-size:0.88rem;">حماية نسخ متعددة صعبة؛ الاسترداد معقد.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">🚫 Sharing Issues</strong><br><span class="en-text" style="font-size:0.88rem;">No real mechanism for simultaneous multi-user access.</span><span class="ar-text arabic" style="font-size:0.88rem;">لا آلية حقيقية للوصول المتزامن لمستخدمين متعددين.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">🔧 Maintenance</strong><br><span class="en-text" style="font-size:0.88rem;">Structural changes force rewriting all application programs.</span><span class="ar-text arabic" style="font-size:0.88rem;">التعديلات الهيكلية تجبر على إعادة كتابة جميع البرامج.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">🚪 Access</strong><br><span class="en-text" style="font-size:0.88rem;">Only programmed operations possible; no interactive querying.</span><span class="ar-text arabic" style="font-size:0.88rem;">فقط العمليات المبرمجة مسبقاً ممكنة، لا استعلام تفاعلي.</span></div>
+      </div>
+
+      <h2><span class="en-text">Solution: DBMS & Database</span><span class="ar-text arabic">الحل: DBMS وقاعدة البيانات</span></h2>
+      <div class="card">
+        <span class="en-text"><strong>Database (DB):</strong> An organized, electronically stored collection of data designed for easy access, management, and updating. <em>All company information in one place.</em></span>
+        <span class="ar-text arabic"><strong>قاعدة البيانات:</strong> مجموعة منظمة من البيانات المخزنة إلكترونياً، مصممة للوصول والإدارة السهلين. <em>جميع معلومات الشركة في مكان واحد.</em></span>
+        <br><br>
+        <span class="en-text"><strong>DBMS:</strong> Software that allows interaction with a DB — defining, building, and manipulating data.</span>
+        <span class="ar-text arabic"><strong>نظام إدارة قاعدة البيانات:</strong> برنامج يتيح التفاعل مع قاعدة البيانات — تعريفها، بناؤها، والتلاعب بالبيانات.</span>
+      </div>
+
+      <h2><span class="en-text">ANSI/SPARC Architecture — 3 Levels of Abstraction</span><span class="ar-text arabic">معمارية ANSI/SPARC — 3 مستويات من التجريد</span></h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:220px;">
+          <defs>
+            <marker id="arrowCh1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/>
+            </marker>
+          </defs>
+          <!-- Level 3: External -->
+          <rect x="20" y="20" width="160" height="50" rx="8" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>
+          <text x="100" y="42" text-anchor="middle" font-family="Syne,sans-serif" font-size="13" font-weight="700" fill="#a855f7">External Level</text>
+          <text x="100" y="58" text-anchor="middle" font-family="Syne,sans-serif" font-size="10" fill="#94a3b8">User Views</text>
+          <rect x="220" y="20" width="160" height="50" rx="8" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>
+          <text x="300" y="42" text-anchor="middle" font-family="Syne,sans-serif" font-size="13" font-weight="700" fill="#a855f7">External Level</text>
+          <text x="300" y="58" text-anchor="middle" font-family="Syne,sans-serif" font-size="10" fill="#94a3b8">User Views</text>
+          <rect x="420" y="20" width="160" height="50" rx="8" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>
+          <text x="500" y="42" text-anchor="middle" font-family="Syne,sans-serif" font-size="13" font-weight="700" fill="#a855f7">External Level</text>
+          <text x="500" y="58" text-anchor="middle" font-family="Syne,sans-serif" font-size="10" fill="#94a3b8">User Views</text>
+          <!-- Arrows up -->
+          <line x1="100" y1="105" x2="100" y2="70" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowCh1)"/>
+          <line x1="300" y1="105" x2="300" y2="70" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowCh1)"/>
+          <line x1="500" y1="105" x2="500" y2="70" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowCh1)"/>
+          <!-- Level 2: Conceptual -->
+          <rect x="100" y="105" width="400" height="50" rx="8" fill="rgba(79,158,255,0.15)" stroke="#4f9eff" stroke-width="2"/>
+          <text x="300" y="127" text-anchor="middle" font-family="Syne,sans-serif" font-size="13" font-weight="700" fill="#4f9eff">Conceptual Level (Logical)</text>
+          <text x="300" y="143" text-anchor="middle" font-family="Syne,sans-serif" font-size="10" fill="#94a3b8">Global DB structure — tables, keys, relationships</text>
+          <!-- Arrow -->
+          <line x1="300" y1="180" x2="300" y2="155" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowCh1)"/>
+          <!-- Level 1: Physical -->
+          <rect x="150" y="180" width="300" height="35" rx="8" fill="rgba(34,211,165,0.15)" stroke="#22d3a5" stroke-width="2"/>
+          <text x="300" y="202" text-anchor="middle" font-family="Syne,sans-serif" font-size="13" font-weight="700" fill="#22d3a5">Physical Level (Internal)</text>
+        </svg>
+      </div>
+      <div class="card-grid">
+        <div class="card"><strong style="color:var(--accent4)">External Level</strong><br><span class="en-text" style="font-size:0.88rem;">Individual user/app views. Multiple views can exist. Hides unnecessary detail.</span><span class="ar-text arabic" style="font-size:0.88rem;">المنظور الخاص بكل مستخدم أو تطبيق. قد تتعدد المناظير.</span></div>
+        <div class="card"><strong style="color:var(--accent)">Conceptual Level</strong><br><span class="en-text" style="font-size:0.88rem;">Unified view of entire DB. Defines what info is stored and relationships.</span><span class="ar-text arabic" style="font-size:0.88rem;">المنظور الكلي لقاعدة البيانات. يحدد ما يُخزّن والعلاقات.</span></div>
+        <div class="card"><strong style="color:var(--accent3)">Physical Level</strong><br><span class="en-text" style="font-size:0.88rem;">How data is physically stored on hardware. Hidden from users.</span><span class="ar-text arabic" style="font-size:0.88rem;">طريقة تخزين البيانات على الجهاز. مخفية عن المستخدمين.</span></div>
+      </div>
+
+      <h2><span class="en-text">DBMS Objectives (8 key points)</span><span class="ar-text arabic">أهداف DBMS (8 نقاط أساسية)</span></h2>
+      <div class="card">
+        <ol style="padding-right:1.2rem;line-height:2.2;">
+          <li><span class="en-text">Provide different levels of abstraction</span><span class="ar-text arabic">توفير مستويات مختلفة من التجريد</span></li>
+          <li><span class="en-text">Ensure <strong>physical data independence</strong></span><span class="ar-text arabic">ضمان <strong>استقلالية البيانات الفيزيائية</strong></span></li>
+          <li><span class="en-text">Ensure <strong>logical data independence</strong></span><span class="ar-text arabic">ضمان <strong>استقلالية البيانات المنطقية</strong></span></li>
+          <li><span class="en-text">Control data redundancy</span><span class="ar-text arabic">التحكم في تكرار البيانات</span></li>
+          <li><span class="en-text">Ensure data integrity</span><span class="ar-text arabic">ضمان سلامة البيانات</span></li>
+          <li><span class="en-text">Ensure data security</span><span class="ar-text arabic">ضمان أمن البيانات</span></li>
+          <li><span class="en-text">Ensure data sharing</span><span class="ar-text arabic">ضمان مشاركة البيانات</span></li>
+          <li><span class="en-text">Optimize data access</span><span class="ar-text arabic">تحسين الوصول إلى البيانات</span></li>
+        </ol>
+      </div>
+
+      <h2><span class="en-text">DB Lifecycle (Development Process)</span><span class="ar-text arabic">دورة حياة قاعدة البيانات</span></h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 680 80" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs>
+            <marker id="arr2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="#4f9eff"/>
+            </marker>
+          </defs>
+          <g font-family="Syne,sans-serif" font-size="10">
+            <rect x="5" y="20" width="110" height="40" rx="6" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="60" y="37" text-anchor="middle" fill="#a855f7" font-weight="700">1. Requirements</text>
+            <text x="60" y="52" text-anchor="middle" fill="#94a3b8">Analysis</text>
+            <line x1="115" y1="40" x2="125" y2="40" stroke="#4f9eff" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <rect x="125" y="20" width="110" height="40" rx="6" fill="rgba(79,158,255,0.2)" stroke="#4f9eff" stroke-width="1.5"/>
+            <text x="180" y="37" text-anchor="middle" fill="#4f9eff" font-weight="700">2. Conceptual</text>
+            <text x="180" y="52" text-anchor="middle" fill="#94a3b8">Design (ERD)</text>
+            <line x1="235" y1="40" x2="245" y2="40" stroke="#4f9eff" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <rect x="245" y="20" width="110" height="40" rx="6" fill="rgba(34,211,165,0.2)" stroke="#22d3a5" stroke-width="1.5"/>
+            <text x="300" y="37" text-anchor="middle" fill="#22d3a5" font-weight="700">3. Logical</text>
+            <text x="300" y="52" text-anchor="middle" fill="#94a3b8">Design (Tables)</text>
+            <line x1="355" y1="40" x2="365" y2="40" stroke="#4f9eff" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <rect x="365" y="20" width="110" height="40" rx="6" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="420" y="37" text-anchor="middle" fill="#f97316" font-weight="700">4. Physical</text>
+            <text x="420" y="52" text-anchor="middle" fill="#94a3b8">Design (DDL)</text>
+            <line x1="475" y1="40" x2="485" y2="40" stroke="#4f9eff" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <rect x="485" y="20" width="110" height="40" rx="6" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="540" y="37" text-anchor="middle" fill="#fbbf24" font-weight="700">5. Implement</text>
+            <text x="540" y="52" text-anchor="middle" fill="#94a3b8">&amp; Deploy</text>
+          </g>
+        </svg>
+      </div>
+      <div class="alert alert-exam">💡 <span class="en-text"><strong>Exam note:</strong> Logical design = relational schema (tables + keys). Conceptual = ERD/Merise. Physical = SQL CREATE TABLE.</span><span class="ar-text arabic"><strong>ملاحظة امتحانية:</strong> التصميم المنطقي = المخطط العلائقي. التصوري = ERD/Merise. الفيزيائي = SQL CREATE TABLE.</span></div>
+    </section>
+
+    <!-- ===== CH2 ===== -->
+    <section id="ch2">
+      <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+      <p class="page-title"><span>Chapter 2</span> · Relational Model</p>
+      <p class="page-subtitle en-text">Tables, keys, integrity constraints — the backbone of SQL databases</p>
+      <p class="page-subtitle ar-text arabic">الجداول، المفاتيح، قيود النزاهة — العمود الفقري لقواعد بيانات SQL</p>
+
+      <h2><span class="en-text">Core Concepts</span><span class="ar-text arabic">المفاهيم الأساسية</span></h2>
+      <table class="db-table">
+        <tr><th><span class="en-text">Term</span><span class="ar-text arabic">المصطلح</span></th><th><span class="en-text">Definition</span><span class="ar-text arabic">التعريف</span></th><th><span class="en-text">Example</span><span class="ar-text arabic">مثال</span></th></tr>
+        <tr><td><strong>Relation</strong></td><td><span class="en-text">2D table; subset of Cartesian product of n domains</span><span class="ar-text arabic">جدول ثنائي الأبعاد</span></td><td>Students table</td></tr>
+        <tr><td><strong>Attribute</strong></td><td><span class="en-text">Column name; takes values from a domain</span><span class="ar-text arabic">اسم العمود؛ قيمه من نطاق محدد</span></td><td>Name, Age</td></tr>
+        <tr><td><strong>Domain</strong></td><td><span class="en-text">Set of possible values for an attribute</span><span class="ar-text arabic">مجموع القيم الممكنة للسمة</span></td><td>Grade ∈ {A,B,C,D,F}</td></tr>
+        <tr><td><strong>Tuple</strong></td><td><span class="en-text">A row / one occurrence in the table</span><span class="ar-text arabic">صف واحد في الجدول</span></td><td>(1, Alice, 20, CS)</td></tr>
+        <tr><td><strong>Degree</strong></td><td><span class="en-text">Number of attributes (columns)</span><span class="ar-text arabic">عدد السمات (الأعمدة)</span></td><td>Students: degree = 4</td></tr>
+        <tr><td><strong>Cardinality</strong></td><td><span class="en-text">Number of tuples (rows)</span><span class="ar-text arabic">عدد الصفوف</span></td><td>Students: card = 5</td></tr>
+      </table>
+
+      <h2><span class="en-text">Types of Keys</span><span class="ar-text arabic">أنواع المفاتيح</span></h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs><marker id="ak" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#94a3b8"/></marker></defs>
+          <g font-family="Syne,sans-serif">
+            <rect x="230" y="10" width="180" height="40" rx="8" fill="rgba(79,158,255,0.2)" stroke="#4f9eff" stroke-width="2"/>
+            <text x="320" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#4f9eff">Candidate Key(s)</text>
+            <line x1="250" y1="50" x2="100" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ak)"/>
+            <line x1="390" y1="50" x2="540" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ak)"/>
+            <rect x="20" y="90" width="160" height="40" rx="8" fill="rgba(34,211,165,0.2)" stroke="#22d3a5" stroke-width="2"/>
+            <text x="100" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#22d3a5">Primary Key (chosen)</text>
+            <rect x="460" y="90" width="160" height="40" rx="8" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
+            <text x="540" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#a855f7">Alternate Key(s)</text>
+            <line x1="100" y1="130" x2="100" y2="155" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ak)"/>
+            <rect x="20" y="155" width="160" height="30" rx="6" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="100" y="175" text-anchor="middle" font-size="11" fill="#f97316">→ Foreign Key (in other table)</text>
+            <rect x="200" y="90" width="240" height="40" rx="8" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="320" y="108" text-anchor="middle" font-size="11" fill="#fbbf24">Composite Key</text>
+            <text x="320" y="122" text-anchor="middle" font-size="10" fill="#94a3b8">multiple attributes → unique ID</text>
+          </g>
+        </svg>
+      </div>
+      <div class="alert alert-exam">⚠️ <span class="en-text"><strong>Exam rule:</strong> Every primary key IS a candidate key. NOT every candidate key is the primary key. Primary key ≠ foreign key in nature — FK references PK of another table.</span><span class="ar-text arabic"><strong>قاعدة امتحانية:</strong> كل مفتاح أساسي هو مفتاح مرشح. المفتاح المرشح ليس دائماً مفتاحاً أساسياً. المفتاح الخارجي يشير إلى المفتاح الأساسي لجدول آخر.</span></div>
+
+      <h2><span class="en-text">Integrity Constraints</span><span class="ar-text arabic">قيود النزاهة</span></h2>
+      <div class="card-grid">
+        <div class="card"><strong style="color:var(--accent3)">a. Domain Constraint</strong><br><span class="en-text" style="font-size:0.87rem;">Values must be valid & within specified domain.<br>Ex: Age > 0 AND Age &lt; 150</span><span class="ar-text arabic" style="font-size:0.87rem;">القيم يجب أن تكون ضمن النطاق المحدد.<br>مثال: العمر > 0 والعمر &lt; 150</span></div>
+        <div class="card"><strong style="color:var(--accent)">b. Entity Integrity</strong><br><span class="en-text" style="font-size:0.87rem;">PK must be UNIQUE and NOT NULL — ever.</span><span class="ar-text arabic" style="font-size:0.87rem;">المفتاح الأساسي يجب أن يكون فريداً وغير فارغ دائماً.</span></div>
+        <div class="card"><strong style="color:var(--accent2)">c. Referential Integrity</strong><br><span class="en-text" style="font-size:0.87rem;">FK must reference an existing PK in other table, or be NULL.<br><em>"A foreign key must match an existing primary key or be null."</em></span><span class="ar-text arabic" style="font-size:0.87rem;">المفتاح الخارجي يجب أن يُشير لمفتاح أساسي موجود، أو يكون فارغاً.</span></div>
+        <div class="card"><strong style="color:var(--accent4)">d. User-defined</strong><br><span class="en-text" style="font-size:0.87rem;">Business rules applied via CHECK constraints.</span><span class="ar-text arabic" style="font-size:0.87rem;">قواعد الأعمال المطبقة عبر قيود CHECK.</span></div>
+      </div>
+
+      <h2><span class="en-text">DB Models Comparison</span><span class="ar-text arabic">مقارنة نماذج قواعد البيانات</span></h2>
+      <table class="db-table">
+        <tr><th>Model</th><th><span class="en-text">Structure</span><span class="ar-text arabic">البنية</span></th><th><span class="en-text">Use Case</span><span class="ar-text arabic">الاستخدام</span></th></tr>
+        <tr><td>Hierarchical</td><td><span class="en-text">Tree — 1 parent per child</span><span class="ar-text arabic">شجرة — أب واحد لكل ابن</span></td><td><span class="en-text">Simple 1:N only</span><span class="ar-text arabic">1:N فقط</span></td></tr>
+        <tr><td>Network</td><td><span class="en-text">Graph — N:N possible (Bachman)</span><span class="ar-text arabic">رسم بياني — N:N ممكن</span></td><td><span class="en-text">Complex relationships</span><span class="ar-text arabic">علاقات معقدة</span></td></tr>
+        <tr><td><strong>Relational ✓</strong></td><td><span class="en-text">Tables — Codd 1970</span><span class="ar-text arabic">جداول — Codd 1970</span></td><td><span class="en-text">Most widely used</span><span class="ar-text arabic">الأكثر استخداماً</span></td></tr>
+        <tr><td>NoSQL</td><td><span class="en-text">Key-value / Document / Graph</span><span class="ar-text arabic">مفتاح-قيمة / وثيقة / رسم</span></td><td><span class="en-text">Big data, scalability</span><span class="ar-text arabic">البيانات الضخمة</span></td></tr>
+      </table>
+    </section>
+
+    <!-- ===== CH3 ===== -->
+    <section id="ch3">
+      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+      <p class="page-title"><span>Chapter 3</span> · Relational Algebra</p>
+      <p class="page-subtitle en-text">8 operators that form the mathematical foundation of SQL</p>
+      <p class="page-subtitle ar-text arabic">8 عمليات تشكّل الأساس الرياضي لـ SQL</p>
+
+      <div class="alert alert-info">📌 <span class="en-text">Relational Algebra produces a new relation from operations on existing relations. No duplicates (it's a set). All operators covered in the exam!</span><span class="ar-text arabic">الجبر العلائقي ينتج علاقة جديدة من عمليات على علاقات موجودة. لا تكرار (مجموعة). جميع العمليات واردة في الامتحان!</span></div>
+
+      <h2><span class="en-text">Operators Summary Table</span><span class="ar-text arabic">جدول ملخص العمليات</span></h2>
+      <table class="db-table">
+        <tr><th>Operator</th><th>Symbol</th><th><span class="en-text">Syntax</span><span class="ar-text arabic">الصيغة</span></th><th><span class="en-text">Cardinality</span><span class="ar-text arabic">القدرة الاستيعابية</span></th><th><span class="en-text">SQL Equiv</span><span class="ar-text arabic">SQL</span></th></tr>
+        <tr><td>Assignment</td><td>←</td><td>RES = R</td><td>= Card(R)</td><td>AS</td></tr>
+        <tr><td><strong>Projection</strong></td><td>[ ]</td><td>R [A1,A2]</td><td>≤ Card(R)</td><td>SELECT DISTINCT</td></tr>
+        <tr><td><strong>Selection</strong></td><td>[ cond ]</td><td>R [cond]</td><td>≤ Card(R)</td><td>WHERE</td></tr>
+        <tr><td>Union</td><td>∪</td><td>R ∪ S</td><td>≤ Card(R)+Card(S)</td><td>UNION</td></tr>
+        <tr><td>Intersection</td><td>∩</td><td>R ∩ S</td><td>≤ min(Card)</td><td>INTERSECT</td></tr>
+        <tr><td>Difference</td><td>−</td><td>R − S</td><td>&lt; Card(R)</td><td>MINUS/EXCEPT</td></tr>
+        <tr><td>Cartesian Product</td><td>×</td><td>R × S</td><td>= Card(R)×Card(S)</td><td>FROM R,S</td></tr>
+        <tr><td><strong>Join</strong></td><td>[Q]</td><td>R [Q] S</td><td>≤ Card(R)×Card(S)</td><td>WHERE / JOIN</td></tr>
+        <tr><td><strong>Division</strong></td><td>÷</td><td>R ÷ S</td><td>Schema=R−S</td><td>NOT EXISTS / GROUP BY+COUNT</td></tr>
+      </table>
+
+      <div class="alert alert-warn">⚠️ <span class="en-text"><strong>Exam trick:</strong> Union/Intersection/Difference require SAME schema (same attributes in same order, same domains). Division is the "for ALL" operator.</span><span class="ar-text arabic"><strong>حيلة الامتحان:</strong> الاتحاد/التقاطع/الفرق تتطلب نفس المخطط. القسمة هي عملية "لكل" (for ALL).</span></div>
+
+      <h2><span class="en-text">Detailed Operator Examples</span><span class="ar-text arabic">أمثلة مفصلة على العمليات</span></h2>
+      <p style="font-size:0.85rem;color:var(--text2);margin-bottom:1rem;"><span class="en-text">DB used: Students(StudentID, Name, Age, Major) | Courses(CourseID, CourseName, Credits, Price) | Enrollments(StudentID, CourseID, Grade)</span><span class="ar-text arabic">قاعدة البيانات المستخدمة: Students | Courses | Enrollments</span></p>
+
+      <h3>1. Projection + Selection (most common exam pattern)</h3>
+      <div class="code-block">
+        <div class="code-label">Relational Algebra</div>
+        <pre><span class="cmt">-- Names of students who got grade A</span>
+R1 = Enrollments [grade = <span class="str">'A'</span>]
+R2 = R1 [studentId]
+R3 = R2 [studentId] Students <span class="cmt">-- Join</span>
+RES = R3 [name]</pre>
+      </div>
+
+      <h3>2. Division — "for ALL" pattern</h3>
+      <div class="code-block">
+        <div class="code-label">Relational Algebra</div>
+        <pre><span class="cmt">-- Students enrolled in ALL courses of 2024</span>
+R1 = Project [start_date >= <span class="str">'2024-01-01'</span> AND end_date <= <span class="str">'2024-12-31'</span>]
+R2 = R1 [proj_num]
+RES = Working ÷ R2</pre>
+      </div>
+
+      <h3>3. Self-join — same time comparison</h3>
+      <div class="code-block">
+        <div class="code-label">Relational Algebra</div>
+        <pre><span class="cmt">-- Projects starting same time as 'bentalleb school renovation'</span>
+R1 = Project [title = <span class="str">'bentalleb school renovation'</span>]
+R2 = R1 [start_date]
+R2' = R1 [proj_num]
+R3 = R2 [R2.start_date = Project.start_date] Project
+RES = R3 [proj_num] − R2' <span class="cmt">-- exclude bentalleb itself</span></pre>
+      </div>
+
+      <h3>4. Intersection — "AND condition across two queries"</h3>
+      <div class="code-block">
+        <div class="code-label">Relational Algebra</div>
+        <pre><span class="cmt">-- Projects where Tafer Ali worked AND managed by Zademi Asma</span>
+R1 = Employee [name = <span class="str">'zademi asma'</span>] → R2 = R1[emp_id=manager] Project → R3 = R2[proj_num]
+R4 = Employee [name = <span class="str">'tafer ali'</span>] → R5 = R4[emp_id] Working → R6 = R5[proj_num]
+RES = R3 ∩ R6</pre>
+      </div>
+
+      <div class="alert alert-tip">✅ <span class="en-text"><strong>Key pattern to memorize:</strong> When asked "projects NOT managed by X" → difference. When "employees who worked on ALL projects" → division. When "managers who are NOT engineers" → difference between managers set and engineers set.</span><span class="ar-text arabic"><strong>النمط الأساسي للحفظ:</strong> "المشاريع التي لم يديرها X" → فرق. "الموظفون الذين عملوا في جميع المشاريع" → قسمة.</span></div>
+    </section>
+
+    <!-- ===== CH4 ===== -->
+    <section id="ch4">
+      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+      <p class="page-title"><span>Chapter 4</span> · SQL</p>
+      <p class="page-subtitle en-text">DDL + DML — CREATE, INSERT, SELECT, JOIN, subqueries, aggregates</p>
+      <p class="page-subtitle ar-text arabic">DDL + DML — إنشاء الجداول، الإدراج، الاستعلام، الوصل، الاستعلامات الفرعية</span></p>
+
+      <h2><span class="en-text">DDL — Data Definition Language</span><span class="ar-text arabic">DDL — لغة تعريف البيانات</span></h2>
+
+      <h3>CREATE TABLE — Full Syntax</h3>
+      <div class="code-block">
+        <div class="code-label">SQL — DDL</div>
+        <pre><span class="kw">CREATE TABLE</span> <span class="tbl">Employee</span> (
+  Id_Employe  <span class="fn">INT</span>           <span class="kw">PRIMARY KEY</span>,
+  Nom         <span class="fn">VARCHAR</span>(<span class="num">50</span>)  <span class="kw">NOT NULL</span>,
+  Poste       <span class="fn">VARCHAR</span>(<span class="num">50</span>)  <span class="kw">NOT NULL</span>,
+  Date_Embauche <span class="fn">DATE</span>,
+  Id_Dept     <span class="fn">INT</span>,
+  <span class="kw">FOREIGN KEY</span> (Id_Dept) <span class="kw">REFERENCES</span> <span class="tbl">Departement</span>(Id_Departement)
+);
+
+<span class="cmt">-- ALTER: Add constraint</span>
+<span class="kw">ALTER TABLE</span> <span class="tbl">Departement</span>
+<span class="kw">ADD CONSTRAINT</span> chk_nom
+<span class="kw">CHECK</span> (Nom_Dep <span class="kw">IN</span> (<span class="str">'Comptabilité'</span>, <span class="str">'MGX'</span>, <span class="str">'Finance'</span>));
+
+<span class="cmt">-- INSERT</span>
+<span class="kw">INSERT INTO</span> <span class="tbl">Employee</span> <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'ACHI'</span>, <span class="str">'CHAIMA'</span>, <span class="str">'2015-10-01'</span>, <span class="num">1</span>);</pre>
+      </div>
+
+      <div class="alert alert-warn">⚠️ <span class="en-text"><strong>Common INSERT errors:</strong> 1) Duplicate primary key → error. 2) Foreign key value doesn't exist in referenced table → error. 3) Wrong date format → must be <code>YYYY-MM-DD</code></span><span class="ar-text arabic"><strong>أخطاء INSERT الشائعة:</strong> 1) المفتاح الأساسي مكرر. 2) قيمة المفتاح الخارجي غير موجودة. 3) تنسيق التاريخ خاطئ.</span></div>
+
+      <h2><span class="en-text">SELECT — Full Evaluation Order</span><span class="ar-text arabic">SELECT — ترتيب التقييم الكامل</span></h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 600 60" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs><marker id="a3" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#4f9eff"/></marker></defs>
+          <g font-family="JetBrains Mono,monospace" font-size="9.5">
+            <rect x="2" y="15" width="80" height="26" rx="4" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="42" y="32" text-anchor="middle" fill="#a855f7" font-weight="700">1. FROM</text>
+            <line x1="82" y1="28" x2="92" y2="28" stroke="#4f9eff" stroke-width="1" marker-end="url(#a3)"/>
+            <rect x="92" y="15" width="80" height="26" rx="4" fill="rgba(79,158,255,0.2)" stroke="#4f9eff" stroke-width="1.5"/>
+            <text x="132" y="32" text-anchor="middle" fill="#4f9eff" font-weight="700">2. WHERE</text>
+            <line x1="172" y1="28" x2="182" y2="28" stroke="#4f9eff" stroke-width="1" marker-end="url(#a3)"/>
+            <rect x="182" y="15" width="90" height="26" rx="4" fill="rgba(34,211,165,0.2)" stroke="#22d3a5" stroke-width="1.5"/>
+            <text x="227" y="32" text-anchor="middle" fill="#22d3a5" font-weight="700">3. GROUP BY</text>
+            <line x1="272" y1="28" x2="282" y2="28" stroke="#4f9eff" stroke-width="1" marker-end="url(#a3)"/>
+            <rect x="282" y="15" width="80" height="26" rx="4" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="322" y="32" text-anchor="middle" fill="#f97316" font-weight="700">4. HAVING</text>
+            <line x1="362" y1="28" x2="372" y2="28" stroke="#4f9eff" stroke-width="1" marker-end="url(#a3)"/>
+            <rect x="372" y="15" width="80" height="26" rx="4" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="412" y="32" text-anchor="middle" fill="#fbbf24" font-weight="700">5. SELECT</text>
+            <line x1="452" y1="28" x2="462" y2="28" stroke="#4f9eff" stroke-width="1" marker-end="url(#a3)"/>
+            <rect x="462" y="15" width="90" height="26" rx="4" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="507" y="32" text-anchor="middle" fill="#a855f7" font-weight="700">6. ORDER BY</text>
+          </g>
+        </svg>
+      </div>
+
+      <h2><span class="en-text">SQL Patterns from Exams</span><span class="ar-text arabic">أنماط SQL من الامتحانات</span></h2>
+
+      <button class="acc-btn" onclick="toggleAcc(this)">JOIN — 3 methods <span>+</span></button>
+      <div class="acc-content">
+        <div class="code-block">
+          <div class="code-label">Method 1: WHERE (Cartesian Product)</div>
+          <pre><span class="kw">SELECT</span> name
+<span class="kw">FROM</span> <span class="tbl">employees</span> E, <span class="tbl">working</span> W, <span class="tbl">project</span> P
+<span class="kw">WHERE</span> E.emp_id = W.emp_id
+  <span class="kw">AND</span> W.proj_num = P.proj_num
+  <span class="kw">AND</span> qualification = <span class="str">'engineer'</span>
+  <span class="kw">AND</span> title = <span class="str">'National road RN15'</span>;</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Method 2: INNER JOIN</div>
+          <pre><span class="kw">SELECT</span> name
+<span class="kw">FROM</span> <span class="tbl">employees</span> E
+<span class="kw">INNER JOIN</span> <span class="tbl">working</span> W <span class="kw">ON</span> E.emp_id = W.emp_id
+<span class="kw">INNER JOIN</span> <span class="tbl">project</span> P <span class="kw">ON</span> W.proj_num = P.proj_num
+<span class="kw">WHERE</span> qualification = <span class="str">'engineer'</span> <span class="kw">AND</span> title = <span class="str">'National road RN15'</span>;</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Method 3: Nested Subquery</div>
+          <pre><span class="kw">SELECT</span> name <span class="kw">FROM</span> <span class="tbl">employees</span>
+<span class="kw">WHERE</span> emp_id <span class="kw">IN</span> (
+  <span class="kw">SELECT</span> emp_id <span class="kw">FROM</span> <span class="tbl">working</span>
+  <span class="kw">WHERE</span> proj_num <span class="kw">IN</span> (
+    <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+    <span class="kw">WHERE</span> title = <span class="str">'National road RN15'</span>))
+<span class="kw">AND</span> qualification = <span class="str">'engineer'</span>;</pre>
+        </div>
+      </div>
+
+      <button class="acc-btn" onclick="toggleAcc(this)">Division in SQL — 2 methods <span>+</span></button>
+      <div class="acc-content">
+        <div class="code-block">
+          <div class="code-label">Method 1: NOT EXISTS (most common in exams)</div>
+          <pre><span class="cmt">-- Employees who worked on ALL 2024 projects</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> <span class="tbl">employee</span> E
+<span class="kw">WHERE NOT EXISTS</span> (
+  <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+  <span class="kw">WHERE</span> start_date >= <span class="str">'2024-01-01'</span>
+    <span class="kw">AND</span> end_date <= <span class="str">'2024-12-31'</span>
+    <span class="kw">AND</span> proj_num <span class="kw">NOT IN</span> (
+      <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">working</span>
+      <span class="kw">WHERE</span> emp_id = E.emp_id));</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">Method 2: GROUP BY + COUNT</div>
+          <pre><span class="cmt">-- Employees enrolled in ALL courses</span>
+<span class="kw">SELECT</span> studentid
+<span class="kw">FROM</span> <span class="tbl">enrollment</span>
+<span class="kw">GROUP BY</span> studentid
+<span class="kw">HAVING COUNT</span>(courseid) = (
+  <span class="kw">SELECT COUNT</span>(<span class="kw">DISTINCT</span> courseid)
+  <span class="kw">FROM</span> <span class="tbl">enrollment</span>);</pre>
+        </div>
+      </div>
+
+      <button class="acc-btn" onclick="toggleAcc(this)">Aggregate Functions + GROUP BY/HAVING <span>+</span></button>
+      <div class="acc-content">
+        <div class="code-block">
+          <div class="code-label">Aggregate Functions</div>
+          <pre><span class="cmt">-- COUNT, SUM, AVG, MIN, MAX</span>
+<span class="kw">SELECT</span> location, <span class="fn">AVG</span>(cost)
+<span class="kw">FROM</span> <span class="tbl">project</span>
+<span class="kw">GROUP BY</span> location
+<span class="kw">HAVING</span> <span class="fn">AVG</span>(cost) >= (<span class="kw">SELECT</span> <span class="fn">AVG</span>(cost) <span class="kw">FROM</span> <span class="tbl">project</span>);
+
+<span class="cmt">-- Managers with total employees supervised</span>
+<span class="kw">SELECT</span> name, <span class="fn">COUNT</span>(W.emp_id)
+<span class="kw">FROM</span> <span class="tbl">Employee</span>, <span class="tbl">Project</span> P, <span class="tbl">Working</span> W
+<span class="kw">WHERE</span> emp_id = manager
+  <span class="kw">AND</span> P.proj_num = W.proj_num
+<span class="kw">GROUP BY</span> manager;</pre>
+        </div>
+        <div class="alert alert-warn" style="margin-top:0.5rem;">🚨 <span class="en-text">Aggregate functions (COUNT, SUM, AVG...) can ONLY be used in SELECT or HAVING clauses. HAVING can ONLY be used with GROUP BY.</span><span class="ar-text arabic">دوال الإجمال لا تُستخدم إلا في SELECT أو HAVING. HAVING لا تُستخدم إلا مع GROUP BY.</span></div>
+      </div>
+
+      <button class="acc-btn" onclick="toggleAcc(this)">INTERSECT / MINUS / UNION <span>+</span></button>
+      <div class="acc-content">
+        <div class="code-block">
+          <pre><span class="cmt">-- Projects managed by Zademi AND where Tafer worked</span>
+<span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+<span class="kw">WHERE</span> manager <span class="kw">IN</span> (<span class="kw">SELECT</span> emp_id <span class="kw">FROM</span> <span class="tbl">employee</span> <span class="kw">WHERE</span> name = <span class="str">'zademi asma'</span>)
+<span class="kw">INTERSECT</span>
+<span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">working</span>
+<span class="kw">WHERE</span> emp_id <span class="kw">IN</span> (<span class="kw">SELECT</span> emp_id <span class="kw">FROM</span> <span class="tbl">employee</span> <span class="kw">WHERE</span> name = <span class="str">'tafer ali'</span>);
+
+<span class="cmt">-- Projects NOT started same time as 'bentalleb' (using MINUS)</span>
+<span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+<span class="kw">WHERE</span> start_date = (<span class="kw">SELECT</span> start_date <span class="kw">FROM</span> <span class="tbl">project</span> <span class="kw">WHERE</span> title=<span class="str">'bentalleb...'</span>)
+<span class="kw">MINUS</span>
+<span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span> <span class="kw">WHERE</span> title = <span class="str">'bentalleb school renovation'</span>;</pre>
+        </div>
+      </div>
+
+      <h2><span class="en-text">Subquery Predicates Cheatsheet</span><span class="ar-text arabic">ورقة غش المحددات الفرعية</span></h2>
+      <table class="db-table">
+        <tr><th>Predicate</th><th><span class="en-text">Meaning</span><span class="ar-text arabic">المعنى</span></th><th><span class="en-text">Note</span><span class="ar-text arabic">ملاحظة</span></th></tr>
+        <tr><td><code>IN</code></td><td><span class="en-text">Value exists in set</span><span class="ar-text arabic">القيمة موجودة في المجموعة</span></td><td>= ANY equivalent</td></tr>
+        <tr><td><code>NOT IN</code></td><td><span class="en-text">Value not in set</span><span class="ar-text arabic">القيمة غير موجودة</span></td><td>&lt;&gt; ALL equivalent</td></tr>
+        <tr><td><code>EXISTS</code></td><td><span class="en-text">Subquery returns ≥1 row</span><span class="ar-text arabic">الاستعلام الفرعي يُرجع صفاً واحداً على الأقل</span></td><td>Correlated</td></tr>
+        <tr><td><code>NOT EXISTS</code></td><td><span class="en-text">Subquery returns 0 rows</span><span class="ar-text arabic">الاستعلام يُرجع 0 صفوف</span></td><td>Used for division</td></tr>
+        <tr><td><code>ALL</code></td><td><span class="en-text">True for all values in set</span><span class="ar-text arabic">صحيح لجميع القيم</span></td><td>Universal quantifier</td></tr>
+        <tr><td><code>ANY/SOME</code></td><td><span class="en-text">True for at least one</span><span class="ar-text arabic">صحيح لقيمة واحدة على الأقل</span></td><td>Existential quantifier</td></tr>
+      </table>
+    </section>
+
+    <!-- ===== CH5 ===== -->
+    <section id="ch5">
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+      <p class="page-title"><span>Chapter 5</span> · Normalization</p>
+      <p class="page-subtitle en-text">Functional Dependencies, Normal Forms, Synthesis Algorithm</p>
+      <p class="page-subtitle ar-text arabic">التبعيات الوظيفية، الأشكال الطبيعية، خوارزمية التركيب</span></p>
+
+      <h2><span class="en-text">Why Normalize?</span><span class="ar-text arabic">لماذا نُطبّع؟</span></h2>
+      <div class="card">
+        <span class="en-text">A bad schema (universal relation) causes 3 anomalies:</span>
+        <span class="ar-text arabic">المخطط السيئ (العلاقة الكونية) يسبب 3 حالات شاذة:</span>
+        <div class="card-grid" style="margin-top:0.8rem;">
+          <div><strong style="color:var(--accent2)">Update anomaly:</strong> <span class="en-text">Same info must be changed in multiple rows.</span><span class="ar-text arabic">نفس المعلومة يجب تغييرها في صفوف متعددة.</span></div>
+          <div><strong style="color:var(--accent2)">Insert anomaly:</strong> <span class="en-text">Can't add new entity without related data.</span><span class="ar-text arabic">لا يمكن إضافة كيان جديد بدون بيانات مرتبطة.</span></div>
+          <div><strong style="color:var(--accent2)">Delete anomaly:</strong> <span class="en-text">Deleting last reference loses all info about entity.</span><span class="ar-text arabic">حذف آخر مرجع يُفقد جميع معلومات الكيان.</span></div>
+        </div>
+      </div>
+
+      <h2><span class="en-text">Functional Dependencies (FD)</span><span class="ar-text arabic">التبعيات الوظيفية</span></h2>
+      <div class="formula">X → Y &nbsp;&nbsp; means: knowing X uniquely determines Y</div>
+      <div class="card-grid">
+        <div class="card">
+          <strong style="color:var(--accent)">Elementary FD:</strong>
+          <span class="en-text"><br>X → Y is elementary when:<br>• Y is single attribute ∉ X<br>• No proper subset of X determines Y<br><br>Ex: teach_id → name ✓<br>teach_id, name → phone ✗ (name not needed)</span>
+          <span class="ar-text arabic"><br>التبعية الوظيفية الأولية:<br>• Y سمة واحدة لا تنتمي لـ X<br>• لا توجد مجموعة فرعية من X تحدد Y<br><br>مثال: teach_id → name ✓</span>
+        </div>
+        <div class="card">
+          <strong style="color:var(--accent3)">Direct FD:</strong>
+          <span class="en-text"><br>X → Y is direct when:<br>• No Z exists such that X → Z AND Z → Y<br>(no transitive chain)<br><br>Ex: student_id → classroom is NOT direct if<br>student_id → group → classroom</span>
+          <span class="ar-text arabic"><br>التبعية الوظيفية المباشرة:<br>• لا يوجد Z بحيث X→Z و Z→Y<br>(لا سلسلة انتقالية)</span>
+        </div>
+      </div>
+
+      <h2><span class="en-text">FD Properties (Redundancy Types)</span><span class="ar-text arabic">خصائص التبعية (أنواع التكرار)</span></h2>
+      <div class="alert alert-exam">🎯 <span class="en-text"><strong>Exam favorite!</strong> Identify redundancy type for each FD.</span><span class="ar-text arabic"><strong>من أكثر ما يأتي في الامتحان!</strong> تحديد نوع التكرار لكل تبعية وظيفية.</span></div>
+      <table class="db-table">
+        <tr><th>Property</th><th><span class="en-text">Rule</span><span class="ar-text arabic">القاعدة</span></th><th><span class="en-text">Example</span><span class="ar-text arabic">مثال</span></th></tr>
+        <tr><td><strong>Reflexivity</strong></td><td>Y ⊆ X → X → Y</td><td>W,T → T &nbsp;<span style="color:var(--accent3)">✓ reflexivity</span></td></tr>
+        <tr><td><strong>Augmentation</strong></td><td>X → Y ⟹ X,Z → Y (adding Z is redundant)</td><td>X,W→S and X,W,T→S: T is augmentation</td></tr>
+        <tr><td><strong>Transitivity</strong></td><td>X→Y and Y→Z ⟹ X→Z (redundant)</td><td>Z→Y and Y→T ⟹ Z→T redundant</td></tr>
+        <tr><td><strong>Pseudo-transitivity</strong></td><td>X→Y and Y,W→Z ⟹ X,W→Z</td><td>Z→X and X,W→V ⟹ Z,W→V redundant</td></tr>
+      </table>
+
+      <h2><span class="en-text">Normal Forms — The 3 Levels</span><span class="ar-text arabic">الأشكال الطبيعية — المستويات الثلاثة</span></h2>
+      <div class="card">
+        <div class="nf-step">
+          <div class="nf-num nf-1">1NF</div>
+          <div>
+            <strong><span class="en-text">First Normal Form</span><span class="ar-text arabic">الشكل الطبيعي الأول</span></strong><br>
+            <span class="en-text">All attributes are <strong>atomic</strong> (indivisible) and <strong>single-valued</strong>.<br>❌ Fails: color = "black AND red" (multivalued) OR address includes city (not atomic)</span>
+            <span class="ar-text arabic">جميع السمات <strong>ذرية</strong> (غير قابلة للتقسيم) و<strong>أحادية القيمة</strong>.<br>❌ فشل: اللون = "أسود وأحمر" (متعدد القيم)</span>
+          </div>
+        </div>
+        <div class="nf-step">
+          <div class="nf-num nf-2">2NF</div>
+          <div>
+            <strong><span class="en-text">Second Normal Form</span><span class="ar-text arabic">الشكل الطبيعي الثاني</span></strong><br>
+            <span class="en-text">In 1NF + every non-key attribute fully depends on the <strong>entire</strong> primary key (no partial dependency).<br>❌ Fails: R(A,B,C,D) key=(A,B) and A→D exists → D partially depends on key</span>
+            <span class="ar-text arabic">في 1NF + كل سمة غير مفتاحية تعتمد على المفتاح الأساسي <strong>كله</strong> (لا اعتماد جزئي).</span>
+          </div>
+        </div>
+        <div class="nf-step">
+          <div class="nf-num nf-3">3NF</div>
+          <div>
+            <strong><span class="en-text">Third Normal Form</span><span class="ar-text arabic">الشكل الطبيعي الثالث</span></strong><br>
+            <span class="en-text">In 2NF + no transitive dependency (no non-key attribute determines another non-key attribute).<br>❌ Fails: Employee(empid, name, daira, wilaya) — daira→wilaya transitive!</span>
+            <span class="ar-text arabic">في 2NF + لا توجد تبعية متعدية (لا سمة غير مفتاحية تُحدد سمة أخرى غير مفتاحية).</span>
+          </div>
+        </div>
+      </div>
+
+      <h2><span class="en-text">Synthesis Algorithm (Decompose to 3NF)</span><span class="ar-text arabic">خوارزمية التركيب (التحليل إلى 3NF)</span></h2>
+      <div class="alert alert-exam">🎯 <span class="en-text"><strong>This IS the exam exercise 3!</strong> ~6 points. Master it.</span><span class="ar-text arabic"><strong>هذا هو تمرين 3 في الامتحان!</strong> ~6 نقاط. أتقنه.</span></div>
+
+      <div class="card">
+        <strong><span class="en-text">Steps:</span><span class="ar-text arabic">الخطوات:</span></strong>
+        <ol style="line-height:2.2;padding-right:1.2rem;margin-top:0.5rem;">
+          <li><span class="en-text">Start from the <strong>minimal FD cover</strong> (elementary + direct FDs only)</span><span class="ar-text arabic">ابدأ من <strong>الغطاء الأدنى للتبعيات</strong> (الأولية والمباشرة فقط)</span></li>
+          <li><span class="en-text">Create a separate relation for each <strong>isolated attribute</strong> (not determined by anything) → it becomes its own key R0</span><span class="ar-text arabic">أنشئ علاقة لكل <strong>سمة معزولة</strong> (لا يحددها شيء)</span></li>
+          <li><span class="en-text">Identify the largest set X that determines attributes → Create R(X, A1, A2...) with X as key</span><span class="ar-text arabic">حدد أكبر مجموعة X تُحدد سمات → أنشئ R(X, A1, A2...)</span></li>
+          <li><span class="en-text">Remove those FDs from the cover</span><span class="ar-text arabic">أزل تلك التبعيات من الغطاء</span></li>
+          <li><span class="en-text">Repeat until FD cover is empty</span><span class="ar-text arabic">كرر حتى يصبح الغطاء فارغاً</span></li>
+        </ol>
+      </div>
+
+      <h3>Exam Example (from corrigé)</h3>
+      <div class="code-block">
+        <div class="code-label">Given UR and FDs</div>
+        <pre>UR(pat_id, pat_name, birthdate, room_num, type, beds-nbr, doctor_id, doc_name, doc_phone, qualification)
+
+FDs:
+  pat_num → pat_name, birthdate, room_num
+  room_num → type, beds-nbr, doctor_id
+  doctor_id → doc_name, doc_phone, qualification
+
+<span class="cmt">Key = pat_num  (pat_id is isolated!)</span>
+
+<span class="cmt">Synthesis Result:</span>
+R0 (pat_id)                                          <span class="cmt">← isolated</span>
+R1 (pat_num, pat_name, birthdate, room_num)          <span class="cmt">← pk: pat_num</span>
+R2 (room_num, type, beds-nbr, doctor_id)             <span class="cmt">← pk: room_num</span>
+R3 (doctor_id, doc_name, doc_phone, qualification)   <span class="cmt">← pk: doctor_id</span></pre>
+      </div>
+
+      <h3>FD Graph (Minimal Cover)</h3>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs>
+            <marker id="fdArr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f97316"/>
+            </marker>
+          </defs>
+          <g font-family="JetBrains Mono,monospace" font-size="11">
+            <!-- Nodes -->
+            <ellipse cx="80" cy="100" rx="50" ry="22" fill="rgba(79,158,255,0.2)" stroke="#4f9eff" stroke-width="2"/>
+            <text x="80" y="105" text-anchor="middle" fill="#4f9eff" font-weight="700">pat_num</text>
+            <ellipse cx="230" cy="40" rx="50" ry="22" fill="rgba(34,211,165,0.2)" stroke="#22d3a5" stroke-width="1.5"/>
+            <text x="230" y="45" text-anchor="middle" fill="#22d3a5">pat_name</text>
+            <ellipse cx="230" cy="100" rx="50" ry="22" fill="rgba(34,211,165,0.2)" stroke="#22d3a5" stroke-width="1.5"/>
+            <text x="230" y="105" text-anchor="middle" fill="#22d3a5">birthdate</text>
+            <ellipse cx="230" cy="160" rx="50" ry="22" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
+            <text x="230" y="165" text-anchor="middle" fill="#a855f7">room_num</text>
+            <ellipse cx="390" cy="100" rx="50" ry="22" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="390" y="105" text-anchor="middle" fill="#f97316">type,beds</text>
+            <ellipse cx="390" cy="160" rx="50" ry="22" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="390" y="165" text-anchor="middle" fill="#f97316">doctor_id</text>
+            <ellipse cx="510" cy="100" rx="40" ry="22" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="510" y="105" text-anchor="middle" fill="#fbbf24">doc_info</text>
+            <!-- Arrows -->
+            <line x1="130" y1="85" x2="178" y2="50" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+            <line x1="130" y1="100" x2="178" y2="100" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+            <line x1="130" y1="115" x2="178" y2="150" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+            <line x1="280" y1="150" x2="338" y2="110" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+            <line x1="280" y1="165" x2="338" y2="165" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+            <line x1="440" y1="155" x2="468" y2="115" stroke="#f97316" stroke-width="1.5" marker-end="url(#fdArr)"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===== MERISE ===== -->
+    <section id="merise">
+      <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+      <p class="page-title"><span>E/R Diagrams</span> · Merise Method</p>
+      <p class="page-subtitle en-text">Entity-Relationship conceptual model — cardinalities, symbols, conversion rules</p>
+      <p class="page-subtitle ar-text arabic">النموذج التصوري Entity-Relationship — القيود، الرموز، قواعد التحويل</span></p>
+
+      <h2><span class="en-text">E/R Notation (Merise)</span><span class="ar-text arabic">رموز Merise</span></h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs><marker id="mer" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#64748b"/></marker></defs>
+          <g font-family="Syne,sans-serif" font-size="11">
+            <!-- Entity -->
+            <rect x="30" y="90" width="130" height="100" rx="8" fill="rgba(79,158,255,0.15)" stroke="#4f9eff" stroke-width="2"/>
+            <text x="95" y="115" text-anchor="middle" font-weight="700" fill="#4f9eff">ENTITY</text>
+            <line x1="30" y1="122" x2="160" y2="122" stroke="#4f9eff" stroke-width="1"/>
+            <text x="95" y="142" text-anchor="middle" fill="#94a3b8" font-size="10">primaryKey</text>
+            <text x="95" y="157" text-anchor="middle" fill="#94a3b8" font-size="10">attribute1</text>
+            <text x="95" y="172" text-anchor="middle" fill="#94a3b8" font-size="10">attribute2</text>
+            <!-- Relation diamond -->
+            <polygon points="295,100 345,140 295,180 245,140" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="2"/>
+            <text x="295" y="144" text-anchor="middle" font-weight="700" fill="#f97316">RELATION</text>
+            <!-- Entity 2 -->
+            <rect x="480" y="90" width="130" height="100" rx="8" fill="rgba(34,211,165,0.15)" stroke="#22d3a5" stroke-width="2"/>
+            <text x="545" y="115" text-anchor="middle" font-weight="700" fill="#22d3a5">ENTITY 2</text>
+            <line x1="480" y1="122" x2="610" y2="122" stroke="#22d3a5" stroke-width="1"/>
+            <text x="545" y="142" text-anchor="middle" fill="#94a3b8" font-size="10">primaryKey</text>
+            <text x="545" y="157" text-anchor="middle" fill="#94a3b8" font-size="10">attribute</text>
+            <!-- Lines -->
+            <line x1="160" y1="140" x2="245" y2="140" stroke="#64748b" stroke-width="1.5"/>
+            <line x1="345" y1="140" x2="480" y2="140" stroke="#64748b" stroke-width="1.5"/>
+            <!-- Cardinalities -->
+            <text x="185" y="132" text-anchor="middle" fill="#f97316" font-weight="700" font-size="13">1,n</text>
+            <text x="455" y="132" text-anchor="middle" fill="#4f9eff" font-weight="700" font-size="13">0,1</text>
+            <!-- Attribute ellipses -->
+            <ellipse cx="295" cy="30" rx="40" ry="20" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="295" y="34" text-anchor="middle" fill="#a855f7" font-size="10">rel-attr</text>
+            <line x1="295" y1="100" x2="295" y2="50" stroke="#64748b" stroke-width="1" stroke-dasharray="3"/>
+          </g>
+          <g font-family="Syne,sans-serif" font-size="10" fill="#94a3b8">
+            <text x="30" y="215">Cardinality reading: min,max</text>
+            <text x="30" y="232">0,1 = optional, at most 1</text>
+            <text x="30" y="249">1,1 = mandatory, exactly 1</text>
+            <text x="30" y="266">0,n = optional, many</text>
+            <text x="320" y="232">1,n = mandatory, many</text>
+            <text x="320" y="249">1,4 = mandatory, at most 4</text>
+          </g>
+        </svg>
+      </div>
+
+      <h2><span class="en-text">E/R to Relational Conversion Rules</span><span class="ar-text arabic">قواعد تحويل E/R إلى علائقي</span></h2>
+      <div class="card">
+        <table class="db-table">
+          <tr><th><span class="en-text">E/R Cardinality</span><span class="ar-text arabic">قيود Merise</span></th><th><span class="en-text">Conversion Rule</span><span class="ar-text arabic">قاعدة التحويل</span></th></tr>
+          <tr><td><strong>1:1 (1,1 — 0,1 or 1,1)</strong></td><td><span class="en-text">FK added to the "1" side (mandatory side). Can merge into one table.</span><span class="ar-text arabic">إضافة FK للجانب "1". يمكن دمجهما في جدول واحد.</span></td></tr>
+          <tr><td><strong>1:N (1,1 — 1,n or 0,n)</strong></td><td><span class="en-text">FK added to the "N" side table → references PK of "1" side.</span><span class="ar-text arabic">إضافة FK لجانب "N" يُشير لـ PK الجانب "1".</span></td></tr>
+          <tr><td><strong>N:N (1,n — 1,n)</strong></td><td><span class="en-text">Create a new JUNCTION TABLE with PKs of both entities as composite PK.</span><span class="ar-text arabic">إنشاء جدول وصل جديد يحمل PKs الكيانين كمفتاح مركب.</span></td></tr>
+        </table>
+      </div>
+
+      <h2><span class="en-text">Exam Example — Daycare Schema</span><span class="ar-text arabic">مثال من الامتحان — مخطط الحضانة</span></h2>
+      <div class="code-block">
+        <div class="code-label">Relational Schema (from interrogation corrigé)</div>
+        <pre>CHILD (<span class="pk">numch</span>, namech, surname, datbirth, genre, *numgar, *numclass)
+LEGAL-GUARDIAN (<span class="pk">numgar</span>, namegar, adrgar, phonegar)
+CLASS (<span class="pk">numclass</span>, nameclass, numberofchild)
+STAFF-MEMBER (<span class="pk">codmemb</span>, namememb, speciality, adrmemb, phonememb)
+IS-RESPONSIBLE (<span class="pk">numclass</span>, <span class="pk">nummemb</span>, task)  ← junction + attribute!
+
+<span class="cmt">-- A=1,1: staff member responsible of one task in one class only
+-- A=1,n: staff member can be responsible in multiple classes</span>
+
+AUTHORIZED-PERSON (<span class="pk">IDnum</span>, nameAP, phoneAP, *numch, relation)
+ROOM (<span class="pk">Roomnum</span>, floor, capacity, Roomtype)
+IS-SCHEDULED (<span class="pk">numclass</span>, <span class="pk">Roomnum</span>, activity)  ← activity = relation attribute!</pre>
+      </div>
+
+      <div class="alert alert-tip">✅ <span class="en-text"><strong>Key rule for A=1,1 vs 1,n:</strong> When the E/A diagram shows more than one class associated to a staff member (visible from the many-side cardinality), A=1,1 is impossible. The diagram forces A=1,n for a correct design.</span><span class="ar-text arabic"><strong>قاعدة A=1,1 مقابل 1,n:</strong> عندما يظهر المخطط أن عضو الطاقم مسؤول في أكثر من صف، فإن A=1,1 مستحيل، وA=1,n هو التصميم الصحيح.</span></div>
+    </section>
+
+    <!-- ===== EXAM ===== -->
+    <section id="exam">
+      <p class="page-title"><span>Mock Exam</span> · 2025 Style</p>
+      <p class="page-subtitle en-text">Structure: Exo1 (8–9pts Q&A all chapters) · Exo2 (~6pts SQL) · Exo3 (~6pts Normalization) — Total: 21pts</p>
+      <p class="page-subtitle ar-text arabic">الهيكل: تمرين1 (8-9 نقاط — أسئلة وأجوبة) · تمرين2 (~6 نقاط SQL) · تمرين3 (~6 نقاط تطبيع)</span></p>
+
+      <div class="alert alert-exam">🎯 <span class="en-text">Click <strong>"Show Answer"</strong> only AFTER writing your own attempt. That's how you reach 20/20!</span><span class="ar-text arabic">اضغط <strong>"أظهر الإجابة"</strong> فقط بعد كتابة إجابتك الخاصة. هكذا تصل إلى 20/20!</span></div>
+
+      <!-- EXO 1 -->
+      <h2>📋 <span class="en-text">Exercise 1 — Theory Q&A (9 pts)</span><span class="ar-text arabic">تمرين 1 — أسئلة نظرية (9 نقاط)</span></h2>
+
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-num">Q1 · Conceptual (0.5pt each)</span>
+          <span class="q-pts">2 pts</span>
+        </div>
+        <p class="q-text"><span class="en-text">For each statement, indicate TRUE or FALSE with justification:</span><span class="ar-text arabic">لكل عبارة، حدد صحيح أو خاطئ مع التبرير:</span><br><br>
+        a) Every relation in a DBMS must have a foreign key.<br>
+        b) In relational algebra, all operators directly supported by SQL.<br>
+        c) In SQL, there are no duplicate tuples by default.<br>
+        d) A primary key is fundamentally a candidate key.
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <strong>a) FALSE</strong> — A relation must have a PK, but a FK is only needed when referencing another table.<br>
+          <strong>b) FALSE</strong> — Division (÷) has no direct SQL operator; implemented via NOT EXISTS or GROUP BY+COUNT.<br>
+          <strong>c) FALSE</strong> — SQL keeps duplicates by default (ALL). Use DISTINCT to remove them.<br>
+          <strong>d) TRUE</strong> — A PK is chosen from among the candidate keys. It IS a candidate key by definition.
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-num">Q2 · E/R & Relational Schema (3 pts)</span>
+          <span class="q-pts">3 pts</span>
+        </div>
+        <p class="q-text">
+          <span class="en-text">Consider a university database. The business rules are:<br>
+          • A student belongs to exactly one group. A group has multiple students.<br>
+          • A student can enroll in multiple courses. A course has multiple enrolled students. The enrollment date is recorded.<br>
+          • Each course is taught by one professor. A professor can teach multiple courses.<br><br>
+          1) (1pt) List the cardinalities for each relationship above.<br>
+          2) (2pts) Provide the complete Relational Schema (logical model) from these rules.
+          </span>
+          <span class="ar-text arabic">
+          قاعدة بيانات جامعية بالقواعد التالية:<br>
+          • الطالب ينتمي لمجموعة واحدة. المجموعة لها طلاب متعددون.<br>
+          • الطالب يمكنه الالتحاق بمقررات متعددة. المقرر له طلاب متعددون. تاريخ الالتحاق مسجّل.<br>
+          • كل مقرر يدرّسه أستاذ واحد. الأستاذ يمكنه تدريس مقررات متعددة.<br><br>
+          1) (1ن) اذكر القيود لكل علاقة.<br>
+          2) (2ن) قدّم المخطط العلائقي الكامل.
+          </span>
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <strong>1) Cardinalities:</strong><br>
+          • Student — belongs to — Group: Student side (1,1) | Group side (1,n) → 1:N<br>
+          • Student — enrolls in — Course: Student side (1,n) | Course side (0,n) → N:N<br>
+          • Course — taught by — Professor: Course side (1,1) | Professor side (0,n) → 1:N<br><br>
+          <strong>2) Relational Schema:</strong>
+          <div class="code-block"><pre>GROUP (<u>group_id</u>, group_name)
+PROFESSOR (<u>prof_id</u>, prof_name, speciality)
+STUDENT (<u>student_id</u>, name, birthdate, *group_id)
+COURSE (<u>course_id</u>, title, credits, *prof_id)
+ENROLLMENT (<u>student_id*</u>, <u>course_id*</u>, enroll_date)</pre></div>
+          <em>Note: ENROLLMENT is the junction table for N:N. The FK *prof_id in COURSE implements the 1:N with Professor.</em>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-num">Q3 · Relational Algebra (2 pts)</span>
+          <span class="q-pts">2 pts</span>
+        </div>
+        <p class="q-text">
+          <span class="en-text">Using the schema: EMPLOYEE(Emp-id, Name, Address, Phone, Qualification, Specialty) | PROJECT(Proj-num, Title, Location, Start-Date, Cost, *Manager) | WORKING(Emp-id, Proj-num)<br><br>
+          Express in relational algebra:<br>
+          a) (1pt) Names of employees who are NOT civil-engineering technicians AND who worked on a project in "Algiers".<br>
+          b) (1pt) List of projects where ALL employees with specialty "architecture" worked.
+          </span>
+          <span class="ar-text arabic">
+          باستخدام المخطط أعلاه:<br>
+          أ) أسماء الموظفين الذين ليسوا تقنيين في الهندسة المدنية والذين عملوا في مشروع بـ"الجزائر".<br>
+          ب) المشاريع التي عمل فيها جميع الموظفين ذوي تخصص "العمارة".
+          </span>
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <strong>a)</strong><br>
+          <div class="code-block"><pre>R1 = Employee [qualification ≠ 'technician' OR specialty ≠ 'civil-engineering']
+R2 = Project [location = 'Algiers']
+R3 = R2 [proj_num] Working        -- employees who worked in Algiers projects
+R4 = R3 [emp_id] Employee         -- join to get employee info
+R5 = R4 [emp_id] R1               -- intersect: non-civil-tech AND worked in Algiers
+RES = R5 [name]</pre></div>
+          <strong>b) Division pattern:</strong>
+          <div class="code-block"><pre>R1 = Employee [specialty = 'architecture']
+R2 = R1 [emp_id]                  -- all architect IDs
+R3 = Working [emp_id] R2          -- all working rows of architects
+RES = R3 [proj_num] ÷ R2          -- projects with ALL architects</pre></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-num">Q4 · FD Analysis (2 pts)</span>
+          <span class="q-pts">2 pts</span>
+        </div>
+        <p class="q-text">
+          <span class="en-text">Given RU(X, Y, Z, S, T, V, W) and DF = {Z→X,Y ; Y→T ; X,W→V,S}<br><br>
+          For each FD below, identify if it presents redundancy and explain which property:<br>
+          a) Z → T<br>
+          b) X,W,T → S<br>
+          c) Z,W → V<br>
+          d) W,T → T</span>
+          <span class="ar-text arabic">بالنظر إلى التبعيات الوظيفية المعطاة:<br>
+          لكل تبعية، حدد إن كانت تحتوي على تكرار واذكر نوع الخاصية:</span>
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          a) <strong>Z → T: Redundancy by TRANSITIVITY</strong> — Z→Y and Y→T, therefore Z→T is derived.<br><br>
+          b) <strong>X,W,T → S: Redundancy by AUGMENTATION</strong> — X,W→S already exists; adding T is unnecessary (augmentation).<br><br>
+          c) <strong>Z,W → V: Redundancy by PSEUDO-TRANSITIVITY</strong> — Z→X and X,W→V, therefore Z,W→V is derived.<br><br>
+          d) <strong>W,T → T: Redundancy by REFLEXIVITY</strong> — T is a subset of {W,T}, so W,T→T is always trivially true.
+        </div>
+      </div>
+
+      <!-- EXO 2 -->
+      <h2>💾 <span class="en-text">Exercise 2 — SQL Queries (~6 pts)</span><span class="ar-text arabic">تمرين 2 — استعلامات SQL (~6 نقاط)</span></h2>
+
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-num">SQL Schema</span>
+        </div>
+        <div class="code-block">
+          <pre>EMPLOYEE (<span class="pk">Emp-id</span>, Name, Address, Phone, Qualification, Specialty)
+PROJECT (<span class="pk">Proj-num</span>, Title, Location, Start-Date, Cost, *Manager)
+WORKING (<span class="pk">Emp-id</span>*, <span class="pk">Proj-num</span>*)</pre>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">SQL Q1 (1.25pt)</span><span class="q-pts">1.25 pts</span></div>
+        <p class="q-text"><span class="en-text">List the names and addresses of managers of projects located in 'Oran', who are themselves engineers.</span><span class="ar-text arabic">قائمة بأسماء وعناوين مدراء المشاريع في "وهران" والذين هم مهندسون.</span></p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <div class="code-block"><pre><span class="kw">SELECT</span> E.name, E.address
+<span class="kw">FROM</span> <span class="tbl">employee</span> E, <span class="tbl">project</span> P
+<span class="kw">WHERE</span> E.emp_id = P.manager
+  <span class="kw">AND</span> P.location = <span class="str">'Oran'</span>
+  <span class="kw">AND</span> E.qualification = <span class="str">'engineer'</span>;</pre></div>
+          Or with JOIN: <code>INNER JOIN project P ON E.emp_id = P.manager</code>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">SQL Q2 (1.25pt)</span><span class="q-pts">1.25 pts</span></div>
+        <p class="q-text"><span class="en-text">List projects where the average cost is higher than the overall average project cost, grouped by location.</span><span class="ar-text arabic">قائمة بالمواقع التي يكون فيها متوسط تكلفة مشاريعها أعلى من المتوسط العام لجميع المشاريع.</span></p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <div class="code-block"><pre><span class="kw">SELECT</span> location, <span class="fn">AVG</span>(cost)
+<span class="kw">FROM</span> <span class="tbl">project</span>
+<span class="kw">GROUP BY</span> location
+<span class="kw">HAVING</span> <span class="fn">AVG</span>(cost) > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(cost) <span class="kw">FROM</span> <span class="tbl">project</span>);</pre></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">SQL Q3 (1.5pt)</span><span class="q-pts">1.5 pts</span></div>
+        <p class="q-text"><span class="en-text">List the names of employees who worked on ALL projects managed by manager with ID = 5.</span><span class="ar-text arabic">أسماء الموظفين الذين عملوا في جميع المشاريع التي يديرها المدير رقم 5.</span></p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <div class="code-block"><pre><span class="cmt">-- Method 1: NOT EXISTS (division)</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> <span class="tbl">employee</span> E
+<span class="kw">WHERE NOT EXISTS</span> (
+  <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+  <span class="kw">WHERE</span> manager = <span class="num">5</span>
+    <span class="kw">AND</span> proj_num <span class="kw">NOT IN</span> (
+      <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">working</span>
+      <span class="kw">WHERE</span> emp_id = E.emp_id));
+
+<span class="cmt">-- Method 2: GROUP BY + COUNT</span>
+<span class="kw">SELECT</span> E.name
+<span class="kw">FROM</span> <span class="tbl">employee</span> E, <span class="tbl">working</span> W, <span class="tbl">project</span> P
+<span class="kw">WHERE</span> E.emp_id = W.emp_id
+  <span class="kw">AND</span> W.proj_num = P.proj_num
+  <span class="kw">AND</span> P.manager = <span class="num">5</span>
+<span class="kw">GROUP BY</span> E.emp_id, E.name
+<span class="kw">HAVING COUNT</span>(<span class="kw">DISTINCT</span> W.proj_num) = (
+  <span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> <span class="tbl">project</span> <span class="kw">WHERE</span> manager = <span class="num">5</span>);</pre></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">SQL Q4 — Interpret this query (1pt)</span><span class="q-pts">1 pt</span></div>
+        <p class="q-text">
+          <div class="code-block"><pre><span class="kw">SELECT</span> emp_id <span class="kw">FROM</span> <span class="tbl">employee</span> E
+<span class="kw">WHERE</span> specialty = <span class="str">'architecture'</span>
+<span class="kw">AND NOT EXISTS</span> (
+  <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">project</span>
+  <span class="kw">WHERE</span> proj_num <span class="kw">NOT IN</span> (
+    <span class="kw">SELECT</span> proj_num <span class="kw">FROM</span> <span class="tbl">working</span>
+    <span class="kw">WHERE</span> emp_id = E.emp_id));</pre></div>
+          <span class="en-text">What does this query return?</span><span class="ar-text arabic">ماذا يُرجع هذا الاستعلام؟</span>
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <strong><span class="en-text">Answer:</span><span class="ar-text arabic">الجواب:</span></strong><br>
+          <span class="en-text">The IDs of employees who are architects (specialty = 'architecture') AND who worked on ALL projects.<br>
+          Pattern: NOT EXISTS + NOT IN = Division → "for ALL" condition.</span>
+          <span class="ar-text arabic">معرّفات الموظفين الذين هم معماريون <strong>ويعملون في جميع المشاريع</strong>.<br>النمط: NOT EXISTS + NOT IN = قسمة → شرط "لكل".</span>
+        </div>
+      </div>
+
+      <!-- EXO 3 -->
+      <h2>📐 <span class="en-text">Exercise 3 — Normalization (~6 pts)</span><span class="ar-text arabic">تمرين 3 — التطبيع (~6 نقاط)</span></h2>
+
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">Normalization Exercise</span><span class="q-pts">6 pts</span></div>
+        <p class="q-text">
+          <span class="en-text">Consider the universal relation for a hospital admissions system:<br><br>
+          UR(pat_id, pat_name, pat_phone, ward_id, ward_name, capacity, nurse_id, nurse_name, admission_date, diagnosis)<br><br>
+          Validated FDs:<br>
+          • pat_id → pat_name, pat_phone, ward_id, admission_date, diagnosis<br>
+          • ward_id → ward_name, capacity, nurse_id<br>
+          • nurse_id → nurse_name<br><br>
+          1) (0.5pt) What is UR's key?<br>
+          2) (1pt) What is UR's normal form? Justify each level.<br>
+          3) (2pts) Apply the synthesis algorithm to produce the 3NF schema. Show the minimal FD cover and steps.<br>
+          4) (0.5pt) If a patient can have multiple diagnoses, which normal form is affected and why?<br>
+          5) (1pt) Write new FDs if: "a nurse is responsible for a ward during a specific shift (day/night)" and "a ward can have multiple nurses".</span>
+          <span class="ar-text arabic">
+          علاقة كونية لنظام إدخال مستشفى:<br>
+          UR(pat_id, pat_name, pat_phone, ward_id, ward_name, capacity, nurse_id, nurse_name, admission_date, diagnosis)<br><br>
+          التبعيات المعتمدة كما هو مذكور أعلاه.<br><br>
+          1) ما هو مفتاح UR؟<br>
+          2) ما هو الشكل الطبيعي لـ UR؟ برّر كل مستوى.<br>
+          3) طبّق خوارزمية التركيب للحصول على مخطط 3NF. أظهر الغطاء الأدنى والخطوات.<br>
+          4) إذا كان للمريض تشخيصات متعددة، أي شكل طبيعي يتأثر ولماذا؟<br>
+          5) اكتب تبعيات وظيفية جديدة للقواعد المذكورة.</span>
+        </p>
+        <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer ✓</button>
+        <div class="answer-box">
+          <strong>1) Key = pat_id</strong> — pat_id determines all other attributes directly or transitively.<br><br>
+          <strong>2) Normal Form:</strong><br>
+          • <em>1NF?</em> YES — all attributes are atomic and single-valued (assuming diagnosis is a single value).<br>
+          • <em>2NF?</em> YES — key is a single attribute (pat_id), so no partial dependency possible.<br>
+          • <em>3NF?</em> NO — ward_id→ward_name, capacity, nurse_id is a transitive dependency (non-key→non-key). Also nurse_id→nurse_name. UR is in <strong>2NF only</strong>.<br><br>
+          <strong>3) Synthesis Algorithm:</strong><br>
+          Minimal cover (all FDs are already elementary and direct after checking):<br>
+          <div class="code-block"><pre>pat_id → pat_name, pat_phone, ward_id, admission_date, diagnosis
+ward_id → ward_name, capacity, nurse_id
+nurse_id → nurse_name
+
+Result:
+R1 (pat_id, pat_name, pat_phone, ward_id, admission_date, diagnosis)  ← pk: pat_id
+R2 (ward_id, ward_name, capacity, nurse_id)                           ← pk: ward_id
+R3 (nurse_id, nurse_name)                                             ← pk: nurse_id</pre></div>
+          <strong>4) 1NF is affected</strong> — if diagnosis can have multiple values, it is no longer atomic/single-valued → violates 1NF. Fix: decompose into a separate DIAGNOSIS(pat_id*, diagnosis) relation.<br><br>
+          <strong>5) New FDs:</strong><br>
+          • "Nurse responsible for ward during shift" → (ward_id, shift) → nurse_id<br>
+          • "Ward can have multiple nurses" → No FD (a ward doesn't determine a unique nurse)
+        </div>
+      </div>
+
+      <div class="alert alert-tip" style="margin-top:2rem;">🏆 <strong><span class="en-text">Score guide: If you answered all correctly → 20+/20. Review any question you got wrong and revisit its chapter. Bonne chance!</span><span class="ar-text arabic">إذا أجبت على كل الأسئلة بشكل صحيح → 20/20 أو أكثر. راجع أي سؤال أخطأت فيه وعد لفصله. حظاً موفقاً!</span></strong></div>
+    </section>
+  </main>
+</div>
+
+<button class="scrolltop" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Navigation
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Language
+function setLang(lang) {
+  if(lang === 'ar') {
+    document.body.classList.add('ar');
+    document.getElementById('btnAR').classList.add('active');
+    document.getElementById('btnEN').classList.remove('active');
+    document.body.style.direction = 'rtl';
+  } else {
+    document.body.classList.remove('ar');
+    document.getElementById('btnEN').classList.add('active');
+    document.getElementById('btnAR').classList.remove('active');
+    document.body.style.direction = 'ltr';
+  }
+}
+
+// Theme
+function toggleTheme() {
+  const isDark = !document.documentElement.hasAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : '');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// Accordion
+function toggleAcc(btn) {
+  const content = btn.nextElementSibling;
+  const isOpen = content.classList.contains('open');
+  document.querySelectorAll('.acc-content').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.acc-btn').forEach(b => {b.classList.remove('open'); b.querySelector('span').textContent = '+';});
+  if(!isOpen) {
+    content.classList.add('open');
+    btn.classList.add('open');
+    btn.querySelector('span').textContent = '−';
+  }
+}
+
+// Show answer
+function toggleAnswer(btn) {
+  const box = btn.nextElementSibling;
+  box.classList.toggle('visible');
+  btn.textContent = box.classList.contains('visible') ? 'Hide Answer ✗' : 'Show Answer ✓';
+}
+
+// Scroll top
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 300);
+});
+</script>
+</body>
+</html>
