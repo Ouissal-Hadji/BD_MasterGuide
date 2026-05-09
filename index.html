@@ -49,12 +49,13 @@ code,pre,.code-block{font-family:'JetBrains Mono',monospace;}
 nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;backdrop-filter:blur(12px);}
 .nav-brand{font-size:1rem;font-weight:800;color:var(--accent);letter-spacing:-0.5px;}
 .nav-controls{display:flex;gap:0.5rem;align-items:center;}
-.lang-btn,.theme-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;font-family:'Syne',sans-serif;transition:all 0.2s;}
-.lang-btn:hover,.theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+.lang-btn,.theme-btn,.menu-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;font-family:'Syne',sans-serif;transition:all 0.2s;}
+.lang-btn:hover,.theme-btn:hover,.menu-btn:hover{border-color:var(--accent);color:var(--accent);}
 .lang-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.menu-btn{display:none;padding:0.28rem 0.62rem;font-size:1.05rem;line-height:1;}
 
 /* LAYOUT */
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);min-width:0;}
 
 /* SIDEBAR */
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;}
@@ -63,10 +64,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px so
 .sidebar-item:hover{color:var(--text);background:var(--highlight);}
 .sidebar-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--highlight);}
 .sidebar-icon{font-size:1rem;width:20px;text-align:center;}
+.sidebar-overlay{position:fixed;inset:56px 0 0 0;background:rgba(6,10,20,0.5);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity 0.22s;z-index:110;}
 
 /* MAIN */
-main{padding:2rem;max-width:960px;}
-section{display:none;animation:fadeIn 0.3s ease;}
+main{padding:2rem;max-width:960px;min-width:0;width:100%;}
+section{display:none;animation:fadeIn 0.3s ease;min-width:0;}
 section.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
@@ -74,7 +76,7 @@ section.active{display:block;}
 .page-title{font-size:2rem;font-weight:800;margin-bottom:0.3rem;letter-spacing:-1px;}
 .page-subtitle{color:var(--text2);font-size:0.95rem;margin-bottom:2rem;}
 .page-title span{color:var(--accent);}
-h2{font-size:1.3rem;font-weight:700;margin:2rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.5rem;}
+h2{font-size:1.3rem;font-weight:700;margin:2rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
 h2::before{content:'';display:inline-block;width:4px;height:20px;background:var(--accent);border-radius:2px;}
 h3{font-size:1rem;font-weight:700;margin:1.5rem 0 0.7rem;color:var(--accent2);}
 
@@ -82,7 +84,18 @@ h3{font-size:1rem;font-weight:700;margin:1.5rem 0 0.7rem;color:var(--accent2);}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color 0.2s;}
 .card:hover{border-color:var(--accent);}
 .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
-@media(max-width:700px){.card-grid{grid-template-columns:1fr;}.layout{grid-template-columns:1fr;}.sidebar{display:none;}}
+@media(max-width:700px){
+  nav{padding:0 0.8rem;}
+  .nav-brand{font-size:0.9rem;max-width:calc(100vw - 185px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;}
+  .card-grid{grid-template-columns:1fr;}
+  .layout{grid-template-columns:1fr;}
+  main{padding:1.2rem;}
+  .sidebar{position:fixed;top:56px;left:0;height:calc(100vh - 56px);width:min(82vw,300px);z-index:120;transform:translateX(-105%);transition:transform 0.24s ease;border-right:1px solid var(--border);box-shadow:8px 0 20px rgba(0,0,0,0.35);}
+  body.sidebar-open .sidebar{transform:translateX(0);}
+  body.sidebar-open .sidebar-overlay{opacity:1;pointer-events:auto;}
+  body.sidebar-open{overflow:hidden;}
+}
 
 /* BADGES */
 .badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:700;margin:0.1rem;letter-spacing:0.02em;}
@@ -175,6 +188,14 @@ body:not(.ar) .en-text{display:block;}
 
 .scrolltop{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--accent);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;z-index:99;opacity:0;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
 .scrolltop.visible{opacity:1;}
+
+@media(max-width:700px){
+  .page-title{font-size:1.7rem;line-height:1.2;overflow-wrap:anywhere;}
+  .page-subtitle,.q-text,.alert,.formula{overflow-wrap:anywhere;}
+  .q-header{flex-wrap:wrap;gap:0.45rem;}
+  .db-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .db-table th,.db-table td{white-space:normal;word-break:break-word;overflow-wrap:anywhere;}
+}
 </style>
 </head>
 <body>
@@ -182,25 +203,28 @@ body:not(.ar) .en-text{display:block;}
 <nav>
   <span class="nav-brand">📚 BD Master Guide — L2 MI S4</span>
   <div class="nav-controls">
+    <button class="menu-btn" id="menuToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="false">&#9776;</button>
     <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
     <button class="lang-btn" id="btnAR" onclick="setLang('ar')">عربي</button>
     <button class="theme-btn" onclick="toggleTheme()">🌙</button>
   </div>
 </nav>
 
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <div class="layout">
   <aside class="sidebar">
     <div class="sidebar-section en-text">Course</div>
     <div class="sidebar-section ar-text">المحاضرات</div>
-    <div class="sidebar-item active" onclick="showSection('ch1')"><span class="sidebar-icon">🗄️</span><span class="en-text">Ch1 · DB & DBMS</span><span class="ar-text">ف1 · قاعدة البيانات</span></div>
-    <div class="sidebar-item" onclick="showSection('ch2')"><span class="sidebar-icon">🔗</span><span class="en-text">Ch2 · Relational Model</span><span class="ar-text">ف2 · النموذج العلائقي</span></div>
-    <div class="sidebar-item" onclick="showSection('ch3')"><span class="sidebar-icon">⚙️</span><span class="en-text">Ch3 · Rel. Algebra</span><span class="ar-text">ف3 · الجبر العلائقي</span></div>
-    <div class="sidebar-item" onclick="showSection('ch4')"><span class="sidebar-icon">💾</span><span class="en-text">Ch4 · SQL</span><span class="ar-text">ف4 · SQL</span></div>
-    <div class="sidebar-item" onclick="showSection('ch5')"><span class="sidebar-icon">📐</span><span class="en-text">Ch5 · Normalization</span><span class="ar-text">ف5 · التطبيع</span></div>
-    <div class="sidebar-item" onclick="showSection('merise')"><span class="sidebar-icon">🗺️</span><span class="en-text">E/R Diagrams (Merise)</span><span class="ar-text">مخططات E/R (Merise)</span></div>
+    <div class="sidebar-item active" onclick="showSection('ch1', this)"><span class="sidebar-icon">🗄️</span><span class="en-text">Ch1 · DB & DBMS</span><span class="ar-text">ف1 · قاعدة البيانات</span></div>
+    <div class="sidebar-item" onclick="showSection('ch2', this)"><span class="sidebar-icon">🔗</span><span class="en-text">Ch2 · Relational Model</span><span class="ar-text">ف2 · النموذج العلائقي</span></div>
+    <div class="sidebar-item" onclick="showSection('ch3', this)"><span class="sidebar-icon">⚙️</span><span class="en-text">Ch3 · Rel. Algebra</span><span class="ar-text">ف3 · الجبر العلائقي</span></div>
+    <div class="sidebar-item" onclick="showSection('ch4', this)"><span class="sidebar-icon">💾</span><span class="en-text">Ch4 · SQL</span><span class="ar-text">ف4 · SQL</span></div>
+    <div class="sidebar-item" onclick="showSection('ch5', this)"><span class="sidebar-icon">📐</span><span class="en-text">Ch5 · Normalization</span><span class="ar-text">ف5 · التطبيع</span></div>
+    <div class="sidebar-item" onclick="showSection('merise', this)"><span class="sidebar-icon">🗺️</span><span class="en-text">E/R Diagrams (Merise)</span><span class="ar-text">مخططات E/R (Merise)</span></div>
     <div class="sidebar-section en-text">Exam Practice</div>
     <div class="sidebar-section ar-text">تدريب على الامتحان</div>
-    <div class="sidebar-item" onclick="showSection('exam')"><span class="sidebar-icon">📝</span><span class="en-text">Mock Exam 2025</span><span class="ar-text">امتحان تجريبي</span></div>
+    <div class="sidebar-item" onclick="showSection('exam', this)"><span class="sidebar-icon">📝</span><span class="en-text">Mock Exam 2025</span><span class="ar-text">امتحان تجريبي</span></div>
   </aside>
 
   <main id="mainContent">
@@ -1107,12 +1131,28 @@ R3 (nurse_id, nurse_name)                                             ← pk: nu
 <button class="scrolltop" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+// Mobile sidebar
+function toggleSidebar() {
+  const willOpen = !document.body.classList.contains('sidebar-open');
+  document.body.classList.toggle('sidebar-open', willOpen);
+  const menuBtn = document.getElementById('menuToggle');
+  if(menuBtn) menuBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+}
+
+function closeSidebar() {
+  document.body.classList.remove('sidebar-open');
+  const menuBtn = document.getElementById('menuToggle');
+  if(menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+}
+
 // Navigation
-function showSection(id) {
+function showSection(id, navItem) {
   document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  const targetSection = document.getElementById(id);
+  if(targetSection) targetSection.classList.add('active');
+  if(navItem && navItem.classList) navItem.classList.add('active');
+  closeSidebar();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1161,6 +1201,14 @@ function toggleAnswer(btn) {
 // Scroll top
 window.addEventListener('scroll', () => {
   document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 300);
+});
+
+window.addEventListener('resize', () => {
+  if(window.innerWidth > 700) closeSidebar();
+});
+
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closeSidebar();
 });
 </script>
 </body>
